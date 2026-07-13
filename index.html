@@ -23,24 +23,23 @@
         }
 
         .card {
-            max-width: 480px;
+            max-width: 380px;
             width: 100%;
             background: #ffffff;
             border-radius: 28px;
-            padding: 28px 24px 20px;
+            padding: 32px 24px 24px;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
         }
 
-        /* Шапка */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .flight-number {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             color: #1d1d1f;
             letter-spacing: -0.02em;
@@ -63,18 +62,21 @@
             background: #007aff;
         }
 
-        /* 3 метрики */
+        .status-badge.error {
+            background: #e53935;
+        }
+
         .metrics {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
 
         .metric {
             background: #f8f8fa;
             border-radius: 14px;
-            padding: 12px 8px;
+            padding: 14px 8px;
             text-align: center;
         }
 
@@ -99,24 +101,6 @@
             color: #8e8e93;
         }
 
-        .metric-value .countdown {
-            color: #007aff;
-        }
-
-        .metric-value .countdown.urgent {
-            color: #e53935;
-        }
-
-        /* Карта */
-        #map {
-            width: 100%;
-            height: 240px;
-            border-radius: 16px;
-            background: #e5e5ea;
-            border: none;
-        }
-
-        /* Живой индикатор */
         .live-info {
             display: flex;
             justify-content: space-between;
@@ -145,18 +129,28 @@
             font-weight: 500;
             color: #1d1d1f;
         }
+
+        .error-msg {
+            color: #e53935;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <!-- Шапка -->
     <div class="header">
-        <span class="flight-number">U6 1555</span>
+        <span class="flight-number">Самолет Анны</span>
         <span class="status-badge" id="statusBadge">● В полёте</span>
     </div>
 
-    <!-- 3 метрики -->
     <div class="metrics">
         <div class="metric">
             <div class="metric-label">Высота</div>
@@ -172,71 +166,37 @@
         </div>
     </div>
 
-    <!-- Карта -->
-    <div id="map"></div>
-
-    <!-- Живой индикатор -->
     <div class="live-info">
         <span><span class="live-dot"></span> LIVE</span>
         <span>обновлено: <span class="update-time" id="updateTime">—</span></span>
     </div>
-</div>
 
-<!-- Leaflet (карта) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <div class="error-msg" id="errorMsg">⚠️ Ошибка загрузки данных</div>
+</div>
 
 <script>
     (function() {
         const API_KEY = '50148e0eddfdf257f62f32d0d4b6a830';
         const FLIGHT = 'U61555';
 
-        // DOM
         const altitudeEl = document.getElementById('altitude');
         const speedEl = document.getElementById('speed');
         const etaEl = document.getElementById('eta');
         const statusBadge = document.getElementById('statusBadge');
         const updateTimeEl = document.getElementById('updateTime');
+        const errorMsg = document.getElementById('errorMsg');
 
-        // Карта
-        let map = null;
-        let marker = null;
-
-        function initMap(lat, lng) {
-            if (!map) {
-                map = L.map('map', {
-                    zoomControl: false,
-                    attributionControl: false,
-                }).setView([lat, lng], 6);
-
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 18,
-                }).addTo(map);
-            }
-
-            if (!marker) {
-                const icon = L.divIcon({
-                    className: 'plane-icon',
-                    html: `<div style="
-                        width: 16px; 
-                        height: 16px; 
-                        background: #007aff; 
-                        border-radius: 50%; 
-                        border: 3px solid white; 
-                        box-shadow: 0 0 20px rgba(0,122,255,0.7);
-                    "></div>`,
-                    iconSize: [22, 22],
-                    iconAnchor: [11, 11],
-                });
-                marker = L.marker([lat, lng], { icon }).addTo(map);
-            } else {
-                marker.setLatLng([lat, lng]);
-            }
-
-            map.setView([lat, lng], 6);
+        function formatTime(utcString) {
+            if (!utcString) return '—';
+            const d = new Date(utcString + 'Z');
+            if (isNaN(d)) return '—';
+            return d.toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Europe/Moscow'
+            });
         }
 
-        // Подсчёт времени до прилёта
         function getCountdown(arrivalUTC) {
             if (!arrivalUTC) return '—';
             const now = new Date();
@@ -253,73 +213,58 @@
             return `${hours}ч ${mins}м`;
         }
 
-        // Основной запрос
         async function fetchData() {
             try {
-                const url = `http://api.aviationstack.com/v1/flights?access_key=${API_KEY}&flight_iata=${FLIGHT}`;
-                const res = await fetch(url);
-                const data = await res.json();
+                // ✅ ИСПРАВЛЕНО: https вместо http
+                const url = `https://api.aviationstack.com/v1/flights?access_key=${API_KEY}&flight_iata=${FLIGHT}`;
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
 
                 if (!data.data || data.data.length === 0) {
                     throw new Error('Рейс не найден');
                 }
 
+                errorMsg.classList.remove('show');
+
                 const f = data.data[0];
                 const status = f.flight_status || 'scheduled';
 
-                // --- Статус ---
+                // Статус
                 if (status === 'active') {
                     statusBadge.textContent = '● В полёте';
                     statusBadge.className = 'status-badge';
                 } else if (status === 'landed') {
                     statusBadge.textContent = '◆ Приземлился';
                     statusBadge.className = 'status-badge landed';
+                } else if (status === 'cancelled') {
+                    statusBadge.textContent = '✕ Отменён';
+                    statusBadge.className = 'status-badge error';
                 } else {
                     statusBadge.textContent = '◌ Ожидание';
                     statusBadge.className = 'status-badge waiting';
                 }
 
-                // --- Высота (футы → км) ---
+                // Высота
                 const altFt = f.live?.altitude || 0;
                 const altKm = altFt > 0 ? (altFt * 0.0003048).toFixed(1) : '—';
                 altitudeEl.innerHTML = `${altKm} <span class="unit">км</span>`;
 
-                // --- Скорость (узлы → км/ч) ---
+                // Скорость
                 const speedKt = f.live?.speed_horizontal || 0;
                 const speedKmh = speedKt > 0 ? Math.round(speedKt * 1.852) : '—';
                 speedEl.innerHTML = `${speedKmh} <span class="unit">км/ч</span>`;
 
-                // --- Время до прилёта ---
+                // Время до прилёта
                 const arrivalSched = f.arrival?.scheduled;
                 const etaText = getCountdown(arrivalSched);
                 etaEl.textContent = etaText;
-                etaEl.className = 'metric-value';
-                if (etaText.includes('мин')) {
-                    const mins = parseInt(etaText);
-                    if (mins < 30) {
-                        etaEl.classList.add('countdown', 'urgent');
-                    } else {
-                        etaEl.classList.add('countdown');
-                    }
-                } else if (etaText === '📍 Прибыл') {
-                    etaEl.classList.add('countdown');
-                }
 
-                // --- Карта ---
-                const lat = f.live?.latitude;
-                const lng = f.live?.longitude;
-                if (lat && lng) {
-                    initMap(lat, lng);
-                } else {
-                    // Если нет координат — показываем аэропорт вылета
-                    const depLat = f.departure?.latitude;
-                    const depLng = f.departure?.longitude;
-                    if (depLat && depLng) {
-                        initMap(depLat, depLng);
-                    }
-                }
-
-                // --- Время обновления ---
+                // Время обновления
                 const now = new Date();
                 updateTimeEl.textContent = now.toLocaleTimeString('ru-RU', {
                     hour: '2-digit',
@@ -327,10 +272,12 @@
                     second: '2-digit'
                 });
 
-            } catch (err) {
-                console.error(err);
+            } catch (error) {
+                console.error('Ошибка:', error);
                 statusBadge.textContent = '⚠️ Ошибка';
-                statusBadge.className = 'status-badge landed';
+                statusBadge.className = 'status-badge error';
+                errorMsg.classList.add('show');
+                errorMsg.textContent = `⚠️ ${error.message}`;
                 updateTimeEl.textContent = '—';
             }
         }
