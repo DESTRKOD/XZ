@@ -1,1868 +1,451 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>Францито — Главная</title>
-<meta content="Францито — вымышленный игровой сайт: сторис Наполеона, посты, комментарии и ." name="description"/>
-<link href="https://images.unsplash.com" rel="preconnect"/>
-<style>
-  :root{
-    --bg-start: #E8F8FF;
-    --bg-end: #F6FBFF;
-    --primary-a: #2BB6FF;
-    --primary-b: #89D4FF;
-    --text: #062533;
-    --muted: #587388;
-    --glass: rgba(255,255,255,0.42);
-    --glass-2: rgba(255,255,255,0.22);
-    --radius: 16px;
-    --card-radius: 14px;
-    --accent: #fff;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    color:var(--text);
-    background: radial-gradient(1200px 400px at 10% 10%, rgba(43,150,255,0.06), transparent),
-                linear-gradient(180deg,var(--bg-start),var(--bg-end));
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    padding-bottom:120px;
-  }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Отслеживание U6 1555</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  .wrap{max-width:1100px;margin:36px auto;padding:0 20px;display:flex;flex-direction:column;gap:28px}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
 
-  header{display:flex;align-items:center;gap:12px}
-  .logo{
-    width:56px;height:56px;border-radius:12px;
-    background:conic-gradient(from 200deg,var(--primary-a),var(--primary-b));
-    display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;
-    box-shadow:0 12px 30px rgba(43,150,255,0.12);
-  }
-  header h1{margin:0;font-size:20px}
-  header p{margin:0;color:var(--muted);font-size:13px}
+        .card {
+            max-width: 640px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 32px 28px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+        }
 
-  .sync-controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-left: auto;
-  }
+        .flight-badge {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            color: #8e8e93;
+            text-transform: uppercase;
+        }
 
-  .sync-btn {
-    background: transparent;
-    border: 1px solid rgba(9,48,74,0.1);
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
 
-  .sync-btn:hover {
-    background: rgba(43,182,255,0.1);
-    border-color: var(--primary-a);
-  }
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #1d1d1f;
+        }
 
-  .sync-status {
-    font-size: 11px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
+        .status-pill {
+            font-size: 15px;
+            font-weight: 500;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: #e5e5ea;
+            color: #1d1d1f;
+        }
 
-  .sync-status.syncing {
-    color: var(--primary-a);
-  }
+        .status-pill.flying {
+            background: #34c759;
+            color: #fff;
+        }
+        .status-pill.landed {
+            background: #8e8e93;
+            color: #fff;
+        }
+        .status-pill.delayed {
+            background: #e53935;
+            color: #fff;
+        }
+        .status-pill.scheduled {
+            background: #007aff;
+            color: #fff;
+        }
 
-  .hero{
-    position:relative;
-    border-radius:var(--radius);
-    padding:28px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.3));
-    box-shadow: 0 10px 30px rgba(6,26,48,0.08);
-    overflow:hidden;
-  }
+        .route {
+            font-size: 17px;
+            font-weight: 400;
+            color: #8e8e93;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e5e5ea;
+            padding-bottom: 14px;
+        }
 
-  .hero-top{display:flex;align-items:center;justify-content:space-between;gap:18px}
-  .hero-left{max-width:64%}
-  .hero-left h2{margin:0;font-size:30px}
-  .hero-left p{margin:8px 0 0;color:var(--muted)}
-  .hero-actions{display:flex;gap:12px;margin-top:16px}
-  .btn{
-    border-radius:12px;padding:10px 14px;border:none;cursor:pointer;font-weight:600;
-    transition:transform .18s ease, box-shadow .18s ease;
-  }
-  .btn:active{transform:translateY(2px)}
-  .btn-primary{
-    background:linear-gradient(90deg,var(--primary-a),var(--primary-b));
-    color:white;box-shadow:0 10px 30px rgba(43,150,255,0.12)
-  }
-  .btn-ghost{
-    background:transparent;border:1px solid rgba(9,48,74,0.06);color:var(--text)
-  }
+        /* Сетка показателей */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-  .stories{
-    display:flex;gap:16px;align-items:center;margin-top:18px;
-    overflow:auto;padding:12px 4px;
-  }
-  .story{
-    min-width:90px;display:flex;flex-direction:column;align-items:center;gap:8px;
-    cursor:pointer;flex-shrink:0;position:relative;
-  }
-  .story .avatar{
-    width:78px;height:78px;border-radius:50%;padding:3px;
-    background:linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4);
-    display:flex;align-items:center;justify-content:center;
-    transition:all 0.3s ease;
-  }
-  .story .avatar:hover{
-    transform:scale(1.05);
-    box-shadow:0 8px 25px rgba(43,150,255,0.2);
-  }
-  .story .avatar img{
-    width:100%;height:100%;border-radius:50%;object-fit:cover;
-    border:3px solid white;
-    box-shadow:0 4px 12px rgba(0,0,0,0.1);
-  }
-  .story small{
-    font-size:12px;color:var(--muted);font-weight:500;
-    max-width:80px;text-align:center;line-height:1.2;
-  }
-  .story .delete-btn{
-    position:absolute;top:-5px;right:-5px;
-    background:#ff6b6b;color:white;border:none;
-    width:20px;height:20px;border-radius:50%;
-    font-size:12px;cursor:pointer;opacity:0;
-    transition:all 0.3s ease;display:flex;align-items:center;justify-content:center;
-    box-shadow:0 2px 8px rgba(255,107,107,0.3);
-  }
-  .story:hover .delete-btn{opacity:1}
-  .story .delete-btn:hover{
-    background:#ff5252;transform:scale(1.1);
-  }
+        .metric {
+            background: #f8f8fa;
+            border-radius: 16px;
+            padding: 14px 12px;
+            text-align: center;
+        }
 
-  .posts{display:grid;grid-template-columns:1fr;gap:20px}
-  .post{
-    border-radius:var(--card-radius);
-    padding:18px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
-    box-shadow: 0 8px 32px rgba(6,26,48,0.08);
-    transition: transform .3s ease, box-shadow .3s ease;
-    border:1px solid rgba(255,255,255,0.5);
-    backdrop-filter:blur(10px);
-    position:relative;
-  }
-  .post:hover{
-    transform:translateY(-4px);
-    box-shadow:0 12px 40px rgba(6,26,48,0.12);
-  }
-  .post-head{
-    display:flex;gap:14px;align-items:center;
-    padding-bottom:14px;border-bottom:1px solid rgba(9,48,74,0.08);
-  }
-  .post-head img{
-    width:60px;height:60px;border-radius:14px;object-fit:cover;
-    border:3px solid rgba(255,255,255,0.8);
-    box-shadow:0 4px 12px rgba(0,0,0,0.1);
-  }
-  .post-head .meta{display:flex;flex-direction:column;flex:1}
-  .post-head .author{
-    font-weight:800;font-size:16px;
-    background:linear-gradient(90deg,var(--text),var(--muted));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  }
-  .post-head .time{
-    font-size:13px;color:var(--muted);margin-top:2px;
-    display:flex;align-items:center;gap:6px;
-  }
-  .post-head .time::before{
-    content:"🕒";font-size:11px;
-  }
+        .metric-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #8e8e93;
+        }
 
-  .post-body{margin-top:16px}
-  .post-body .text-content{
-    font-size:15px;line-height:1.5;color:var(--text);
-    margin-bottom:16px;padding:0 4px;
-  }
-  .post-body .media-container{
-    border-radius:16px;overflow:hidden;
-    box-shadow:0 8px 24px rgba(0,0,0,0.1);
-    position:relative;
-  }
-  .post-body img{
-    width:100%;height:380px;object-fit:cover;display:block;
-    transition:transform 0.3s ease;
-  }
-  .post-body video{
-    width:100%;height:380px;border-radius:16px;background:#000;
-    box-shadow:0 8px 24px rgba(0,0,0,0.15);
-  }
-  .post-body .media-container:hover img{
-    transform:scale(1.02);
-  }
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-top: 4px;
+        }
 
-  .post-actions{
-    display:flex;gap:16px;align-items:center;margin-top:16px;
-    padding-top:14px;border-top:1px solid rgba(9,48,74,0.06);
-  }
-  .like-btn{
-    background:transparent;border:none;cursor:pointer;
-    font-weight:700;color:#94a3b8;transition:all 0.3s ease;
-    display:flex;align-items:center;gap:6px;padding:8px 12px;
-    border-radius:10px;
-  }
-  .like-btn:hover{
-    background:rgba(255,55,95,0.1);color:#ff375f;
-    transform:translateY(-1px);
-  }
-  .like-btn.liked{
-    color:#ff375f;
-    background:rgba(255,55,95,0.1);
-  }
-  .likes-count{font-weight:700;font-size:14px;color:inherit}
+        .metric-value .unit {
+            font-size: 14px;
+            font-weight: 400;
+            color: #8e8e93;
+            margin-left: 2px;
+        }
 
-  .comment-btn{
-    background:transparent;border:none;cursor:pointer;
-    font-weight:700;color:var(--muted);transition:all 0.3s ease;
-    display:flex;align-items:center;gap:6px;padding:8px 12px;
-    border-radius:10px;
-  }
-  .comment-btn:hover{
-    background:rgba(43,182,255,0.1);color:var(--primary-a);
-    transform:translateY(-1px);
-  }
+        /* Детали */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f2;
+        }
 
-  .delete-post-btn{
-    background:transparent;border:none;cursor:pointer;
-    font-weight:700;color:var(--muted);transition:all 0.3s ease;
-    display:flex;align-items:center;gap:6px;padding:8px 12px;
-    border-radius:10px;margin-left:auto;
-  }
-  .delete-post-btn:hover{
-    background:rgba(255,107,107,0.1);color:#ff6b6b;
-    transform:translateY(-1px);
-  }
+        .detail-row:last-of-type {
+            border-bottom: none;
+        }
 
-  .comments{
-    margin-top:16px;display:flex;flex-direction:column;gap:12px;
-    background:rgba(255,255,255,0.4);padding:16px;border-radius:12px;
-    border:1px solid rgba(255,255,255,0.6);
-  }
-  .comment{
-    display:flex;gap:12px;align-items:flex-start;
-    padding:12px;border-radius:10px;
-    background:rgba(255,255,255,0.6);
-    transition:background 0.3s ease;
-  }
-  .comment:hover{
-    background:rgba(255,255,255,0.8);
-  }
-  .comment .c-avatar{
-    width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink:0;
-    background:linear-gradient(135deg,var(--primary-a),var(--primary-b));
-    display:flex;align-items:center;justify-content:center;
-    color:white;font-weight:700;font-size:14px;
-    box-shadow:0 4px 8px rgba(0,0,0,0.1);
-  }
-  .comment .c-body{
-    background:transparent;padding:0;border-radius:0;flex:1;
-  }
-  .comment .name{
-    font-weight:700;font-size:14px;
-    background:linear-gradient(90deg,var(--text),var(--muted));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  }
-  .comment .text{
-    font-size:14px;color:var(--text);margin-top:4px;line-height:1.4;
-  }
+        .detail-label {
+            font-size: 15px;
+            color: #6e6e73;
+        }
 
-  .add-comment{
-    display:flex;gap:10px;align-items:center;margin-top:12px;
-    background:white;padding:12px;border-radius:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05);
-  }
-  .add-comment input{
-    flex:1;padding:12px;border-radius:10px;border:1px solid rgba(9,48,74,0.1);
-    background:rgba(248,250,252,0.8);font-size:14px;
-    transition:all 0.3s ease;
-  }
-  .add-comment input:focus{
-    outline:none;border-color:var(--primary-a);
-    box-shadow:0 0 0 3px rgba(43,182,255,0.1);
-  }
-  .add-comment button{
-    padding:12px 20px;border-radius:10px;border:none;
-    background:linear-gradient(90deg,var(--primary-a),var(--primary-b));
-    color:white;font-weight:700;font-size:14px;
-    transition:all 0.3s ease;box-shadow:0 4px 12px rgba(43,182,255,0.2);
-  }
-  .add-comment button:hover{
-    transform:translateY(-1px);box-shadow:0 6px 16px rgba(43,182,255,0.3);
-  }
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d1d1f;
+            text-align: right;
+        }
 
-  .welcome-modal{
-    position:fixed;inset:0;background:rgba(6,20,30,0.85);display:flex;align-items:center;justify-content:center;z-index:300;
-    padding:24px;
-  }
-  .welcome-content{
-    width:min(480px,98%);border-radius:20px;padding:32px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(246,253,255,0.95));
-    box-shadow:0 40px 100px rgba(6,20,40,0.6);
-    animation: pop .2s ease;
-    border:1px solid rgba(255,255,255,0.8);
-    backdrop-filter:blur(20px);
-  }
-  .welcome-tabs{
-    display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid rgba(9,48,74,0.1);
-    background:rgba(255,255,255,0.5);border-radius:12px;padding:4px;
-  }
-  .welcome-tab{
-    flex:1;padding:14px;text-align:center;background:transparent;border:none;cursor:pointer;
-    font-weight:600;color:var(--muted);border-radius:8px;transition:all 0.3s ease;
-  }
-  .welcome-tab.active{
-    color:var(--primary-a);background:white;
-    box-shadow:0 4px 12px rgba(43,182,255,0.15);
-  }
-  .welcome-form{display:flex;flex-direction:column;gap:18px}
-  .form-group{display:flex;flex-direction:column;gap:8px}
-  .form-group label{font-weight:600;font-size:14px;color:var(--text)}
-  .form-group input{
-    padding:14px;border-radius:12px;border:1px solid rgba(9,48,74,0.1);
-    background:rgba(255,255,255,0.8);font-size:15px;transition:all 0.3s ease;
-  }
-  .form-group input:focus{
-    outline:none;border-color:var(--primary-a);
-    box-shadow:0 0 0 3px rgba(43,182,255,0.1);
-  }
+        .countdown {
+            font-size: 20px;
+            font-weight: 700;
+            color: #007aff;
+        }
 
-  .profile-modal{
-    position:fixed;inset:0;background:rgba(6,20,30,0.85);display:none;align-items:center;justify-content:center;z-index:300;
-    padding:24px;
-  }
-  .profile-content{
-    width:min(480px,98%);border-radius:20px;padding:32px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(246,253,255,0.95));
-    box-shadow:0 40px 100px rgba(6,20,40,0.6);
-    animation: pop .2s ease;
-    border:1px solid rgba(255,255,255,0.8);
-  }
+        .countdown.urgent {
+            color: #e53935;
+        }
 
-  .create-modal{
-    position:fixed;inset:0;background:rgba(6,20,30,0.85);display:none;align-items:center;justify-content:center;z-index:300;
-    padding:24px;
-  }
-  .create-content{
-    width:min(600px,98%);border-radius:20px;padding:32px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(246,253,255,0.95));
-    box-shadow:0 40px 100px rgba(6,20,40,0.6);
-    animation: pop .2s ease;
-    border:1px solid rgba(255,255,255,0.8);
-  }
+        /* Карта */
+        #map {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            margin: 16px 0 12px;
+            background: #e5e5ea;
+            border: none;
+        }
 
-  .ad-modal{
-    position:fixed;inset:0;background:rgba(6,20,30,0.85);display:none;align-items:center;justify-content:center;z-index:300;
-    padding:24px;
-  }
-  .ad-content{
-    width:min(700px,98%);border-radius:20px;padding:32px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(246,253,255,0.95));
-    box-shadow:0 40px 100px rgba(6,20,40,0.6);
-    animation: pop .2s ease;
-    border:1px solid rgba(255,255,255,0.8);
-  }
+        .update-info {
+            font-size: 12px;
+            color: #8e8e93;
+            text-align: center;
+            margin-top: 10px;
+        }
 
-  .file-upload{
-    border:2px dashed rgba(43,182,255,0.4);border-radius:16px;padding:30px;text-align:center;
-    transition:all 0.3s ease;cursor:pointer;background:rgba(255,255,255,0.5);
-    position:relative;overflow:hidden;
-  }
-  .file-upload:hover{
-    background:rgba(255,255,255,0.7);border-color:rgba(43,182,255,0.8);
-    transform:translateY(-2px);box-shadow:0 8px 24px rgba(43,182,255,0.15);
-  }
-  .file-upload input{display:none}
-  .upload-icon{font-size:42px;margin-bottom:12px;color:var(--primary-a)}
-  .upload-text{font-weight:700;color:var(--text);font-size:16px;margin-bottom:6px}
-  .upload-subtext{font-size:13px;color:var(--muted)}
+        .update-info span {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
 
-  .fullscreen-ad{
-    position:fixed;inset:0;background:rgba(6,20,30,0.95);display:none;align-items:center;justify-content:center;z-index:400;
-    animation: fadeIn 0.5s ease;
-    overflow: auto;
-    padding: 20px;
-  }
-  .fullscreen-ad-content{
-    width:90%;max-width:420px;border-radius:24px;padding:25px;text-align:center;
-    color:white;position:relative;
-    animation: scaleIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow:0 20px 60px rgba(0,0,0,0.3);
-    max-height: 85vh;
-    overflow-y: auto;
-  }
-  @keyframes scaleIn{
-    0%{transform:scale(0.8);opacity:0}
-    100%{transform:scale(1);opacity:1}
-  }
+        .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #34c759;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: blink 1.4s infinite;
+        }
 
-  .ad-close{
-    background:rgba(255,255,255,0.25);border:none;color:white;width:30px;height:30px;
-    border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;
-    transition:background 0.3s ease;position:absolute;top:10px;right:10px;
-  }
-  .ad-close:hover{background:rgba(255,255,255,0.4)}
-
-  .color-picker{
-    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
-  }
-  .color-option{
-    width:40px;height:40px;border-radius:10px;cursor:pointer;
-    border:3px solid transparent;transition:all 0.3s ease;
-  }
-  .color-option:hover{
-    transform:scale(1.1);border-color:rgba(0,0,0,0.2);
-  }
-  .color-option.selected{
-    border-color:var(--primary-a);transform:scale(1.1);
-    box-shadow:0 4px 12px rgba(0,0,0,0.2);
-  }
-
-  .modal-backdrop{
-    position:fixed;inset:0;background:rgba(6,20,30,0.75);display:none;align-items:center;justify-content:center;z-index:200;
-    padding:24px;
-  }
-  .modal{
-    width:min(980px,98%);max-height:92vh;overflow:auto;border-radius:20px;padding:24px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(246,253,255,0.95));
-    box-shadow:0 40px 100px rgba(6,20,40,0.6);
-    animation: pop .2s ease;
-    border:1px solid rgba(255,255,255,0.8);
-  }
-  @keyframes pop{from{transform:translateY(10px) scale(.99);opacity:0}to{transform:none;opacity:1}}
-
-  .smooth-entrance {
-    animation: smoothEntrance 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  }
-  @keyframes smoothEntrance {
-    0% { opacity: 0; transform: translateY(30px) scale(0.95); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  .fade-in {
-    animation: fadeIn 0.6s ease-out both;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .ad-video-container {
-    width: 100%;
-    max-width: 360px;
-    height: 640px;
-    margin: 0 auto 16px auto;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    background: #000;
-  }
-
-  .ad-video-container video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .ad-image-container {
-    width: 100%;
-    max-width: 400px;
-    height: 300px;
-    margin: 0 auto 16px auto;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  }
-
-  .ad-image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  @media (max-width:860px){
-    .hero-left{max-width:100%}
-    .post-body img{height:280px}
-    .post-body video{height:280px}
-    .stories{padding:10px 0}
-    .story .avatar{width:68px;height:68px}
-    .story{min-width:80px}
-    .ad-video-container {
-      max-width: 320px;
-      height: 560px;
-    }
-    .ad-image-container {
-      max-width: 350px;
-      height: 250px;
-    }
-  }
-
-  @media (max-width:480px){
-    .post{padding:14px}
-    .post-head img{width:50px;height:50px}
-    .post-body img{height:220px}
-    .post-body video{height:220px}
-    .hero{padding:20px}
-    .ad-video-container {
-      max-width: 300px;
-      height: 520px;
-    }
-    .ad-image-container {
-      max-width: 320px;
-      height: 200px;
-    }
-    .fullscreen-ad-content{
-      max-width: 95%;
-      padding: 20px;
-    }
-  }
-
-  .muted{color:var(--muted)}
-</style>
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+    </style>
 </head>
 <body>
-<div class="welcome-modal" id="welcomeModal">
-<div class="welcome-content">
-<div class="welcome-tabs">
-<button class="welcome-tab active" data-tab="login">Вход</button>
-<button class="welcome-tab" data-tab="register">Регистрация</button>
-</div>
-<form class="welcome-form" id="loginForm" style="display:block">
-<div class="form-group">
-<label for="loginUsername">Имя пользователя</label>
-<input id="loginUsername" required="" type="text"/>
-</div>
-<div class="form-group">
-<label for="loginPassword">Пароль</label>
-<input id="loginPassword" required="" type="password"/>
-</div>
-<button class="btn btn-primary" type="submit">Войти</button>
-</form>
-<form class="welcome-form" id="registerForm" style="display:none">
-<div class="form-group">
-<label for="registerUsername">Имя пользователя</label>
-<input id="registerUsername" required="" type="text"/>
-</div>
-<div class="form-group">
-<label for="registerEmail">Email</label>
-<input id="registerEmail" required="" type="email"/>
-</div>
-<div class="form-group">
-<label for="registerPassword">Пароль</label>
-<input id="registerPassword" required="" type="password"/>
-</div>
-<button class="btn btn-primary" type="submit">Зарегистрироваться</button>
-</form>
-</div>
+
+<div class="card" id="app">
+    <div class="flight-badge">✈️ LIVE • Рейс</div>
+    <div class="header-row">
+        <h1>U6 1555</h1>
+        <span class="status-pill" id="statusPill">Загрузка…</span>
+    </div>
+    <div class="route" id="routeLabel">— → —</div>
+
+    <!-- 3 главные метрики: высота, скорость, до прилёта -->
+    <div class="metrics-grid">
+        <div class="metric">
+            <div class="metric-label">Высота</div>
+            <div class="metric-value" id="altitudeValue">— <span class="unit">км</span></div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">Скорость</div>
+            <div class="metric-value" id="speedValue">— <span class="unit">км/ч</span></div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">До прилёта</div>
+            <div class="metric-value countdown" id="countdownValue">—</div>
+        </div>
+    </div>
+
+    <!-- Карта (OpenStreetMap) -->
+    <div id="map"></div>
+
+    <!-- Детальная информация -->
+    <div class="detail-row">
+        <span class="detail-label">Аэропорт вылета</span>
+        <span class="detail-value" id="depAirport">—</span>
+    </div>
+    <div class="detail-row">
+        <span class="detail-label">Аэропорт прилёта</span>
+        <span class="detail-value" id="arrAirport">—</span>
+    </div>
+    <div class="detail-row">
+        <span class="detail-label">Вылет (по расписанию)</span>
+        <span class="detail-value" id="schedDep">—</span>
+    </div>
+    <div class="detail-row">
+        <span class="detail-label">Прилёт (по расписанию)</span>
+        <span class="detail-value" id="schedArr">—</span>
+    </div>
+    <div class="detail-row">
+        <span class="detail-label">Задержка</span>
+        <span class="detail-value" id="delayValue">0 мин</span>
+    </div>
+
+    <div class="update-info">
+        <span class="live-dot"></span> Обновление каждые <span>10</span> сек • <span id="lastUpdate">только что</span>
+    </div>
 </div>
 
-<div class="profile-modal" id="profileModal">
-<div class="profile-content">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-<h3 style="margin:0;font-size:22px">Профиль</h3>
-<button class="btn btn-ghost" id="closeProfileBtn">Закрыть</button>
-</div>
-<div style="display:flex;flex-direction:column;align-items:center;gap:18px;margin-bottom:28px">
-<div style="width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,var(--primary-a),var(--primary-b));display:flex;align-items:center;justify-content:center;color:white;font-size:42px;font-weight:700;box-shadow:0 8px 24px rgba(43,182,255,0.3)">
-<span id="profileInitial"></span>
-</div>
-<div>
-<div id="profileUsername" style="font-weight:800;font-size:20px;text-align:center"></div>
-<div id="profileEmail" style="color:var(--muted);text-align:center;margin-top:4px"></div>
-</div>
-</div>
-<div class="form-group">
-<label for="profileUsernameInput">Имя пользователя</label>
-<input id="profileUsernameInput" type="text"/>
-</div>
-<div class="form-group">
-<label for="profileEmailInput">Email</label>
-<input id="profileEmailInput" type="email"/>
-</div>
-<button class="btn btn-primary" id="saveProfileBtn" style="margin-top:10px">Сохранить изменения</button>
-</div>
-</div>
-
-<div class="create-modal" id="createModal">
-<div class="create-content">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-<h3 id="createModalTitle" style="margin:0;font-size:22px">Создать пост</h3>
-<button class="btn btn-ghost" id="closeCreateBtn">Закрыть</button>
-</div>
-<div class="welcome-tabs" id="createTypeTabs" style="margin-bottom:24px">
-<button class="welcome-tab active" data-type="post">📝 Пост</button>
-<button class="welcome-tab" data-type="story">🌟 Сторис</button>
-</div>
-<form class="welcome-form" id="createForm">
-<div class="form-group">
-<label for="createText">Текст</label>
-<textarea id="createText" placeholder="Что у вас нового?" rows="4" style="padding:16px;border-radius:12px;border:1px solid rgba(9,48,74,0.1);background:rgba(255,255,255,0.8);resize:vertical;font-size:15px;transition:all 0.3s ease"></textarea>
-</div>
-<div class="form-group">
-<label>Загрузить фото или видео</label>
-<div class="file-upload" id="fileUploadArea">
-<div class="upload-icon">📁</div>
-<div class="upload-text">Нажмите для загрузки файла</div>
-<div class="upload-subtext">Поддерживаются: JPG, PNG, GIF, MP4 (до 500KB)</div>
-<input accept="image/*,video/*" id="fileInput" type="file"/>
-</div>
-</div>
-<div id="mediaPreview" style="display:none;margin-bottom:20px">
-<div style="border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.15)">
-<img alt="Предпросмотр" id="previewImage" src="" style="width:100%;max-height:220px;object-fit:cover;display:none"/>
-<video controls="" id="previewVideo" style="width:100%;max-height:220px;display:none;background:#000"></video>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-<span id="fileName" style="font-size:13px;color:var(--muted);font-weight:500"></span>
-<button class="btn btn-ghost" id="removeFileBtn" style="font-size:12px;padding:6px 12px" type="button">🗑️ Удалить</button>
-</div>
-</div>
-<button class="btn btn-primary" id="publishBtn" style="padding:14px;font-size:16px;margin-top:10px" type="submit">🚀 Опубликовать</button>
-</form>
-</div>
-</div>
-
-<div class="ad-modal" id="adModal">
-<div class="ad-content">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-<h3 style="margin:0;font-size:22px">🎯 Настройка рекламы</h3>
-<button class="btn btn-ghost" id="closeAdBtn">Закрыть</button>
-</div>
-<form class="welcome-form" id="adForm">
-<div class="form-group">
-<label for="adTitle">Заголовок рекламы</label>
-<input id="adTitle" placeholder="Введите заголовок" type="text" value="ОМАХ"/>
-</div>
-<div class="form-group">
-<label for="adText">Текст рекламы</label>
-<textarea id="adText" placeholder="Введите текст рекламы" rows="3" style="padding:16px;border-radius:12px;border:1px solid rgba(9,48,74,0.1);background:rgba(255,255,255,0.8);resize:vertical;font-size:15px">МАХ ЛОВИТ ДАЖЕ ВО ФРАНЦИИ!</textarea>
-</div>
-<div class="form-group">
-<label for="adButtonText">Текст на кнопке</label>
-<input id="adButtonText" placeholder="Текст на кнопке" type="text" value="Узнать больше"/>
-</div>
-<div class="form-group">
-<label>Цвет фона рекламы</label>
-<div class="color-picker">
-<div class="color-option selected" data-color="667eea,764ba2" style="background:linear-gradient(135deg, #667eea, #764ba2)"></div>
-<div class="color-option" data-color="ff6b6b,ee5a24" style="background:linear-gradient(135deg, #ff6b6b, #ee5a24)"></div>
-<div class="color-option" data-color="4ECDC4,44A08D" style="background:linear-gradient(135deg, #4ECDC4, #44A08D)"></div>
-<div class="color-option" data-color="FFD93D,FF9A3D" style="background:linear-gradient(135deg, #FFD93D, #FF9A3D)"></div>
-<div class="color-option" data-color="6A11CB,2575FC" style="background:linear-gradient(135deg, #6A11CB, #2575FC)"></div>
-</div>
-</div>
-<div class="form-group">
-<label>Загрузить изображение или видео для рекламы</label>
-<div class="file-upload" id="adFileUploadArea">
-<div class="upload-icon">🎬</div>
-<div class="upload-text">Нажмите для загрузки медиафайла</div>
-<div class="upload-subtext">Поддерживаются: JPG, PNG, GIF, MP4 (до 1MB)</div>
-<input accept="image/*,video/*" id="adFileInput" type="file"/>
-</div>
-</div>
-<button class="btn btn-primary" id="saveAdBtn" style="padding:14px;font-size:16px;margin-top:10px" type="submit">💾 Сохранить рекламу</button>
-</form>
-</div>
-</div>
-
-<div class="fullscreen-ad" id="fullscreenAd">
-<div class="fullscreen-ad-content" id="fullscreenAdContent">
-</div>
-</div>
-
-<div id="mainContent" style="display:none">
-<div class="wrap">
-<header>
-<div aria-hidden="true" class="logo">Ф</div>
-<div>
-<h1 style="font-size:22px">Францито</h1>
-<p style="font-size:14px">Новости Наполеона, сторис и юнитов</p>
-</div>
-<div class="sync-controls">
-<div class="sync-status" id="syncStatus">🔄 Облако</div>
-<button class="sync-btn" id="manualSyncBtn">🔄 Обновить</button>
-<button class="sync-btn" id="clearDataBtn">🗑️ Очистить</button>
-</div>
-<div style="margin-left:auto;display:flex;align-items:center;gap:14px">
-<button class="btn btn-primary" id="createPostBtn" style="display:none;align-items:center;gap:8px;padding:10px 16px">
-📝 Создать
-</button>
-<button class="btn btn-ghost" id="createAdBtn" style="display:none;align-items:center;gap:8px;padding:10px 16px">
-🎯 Реклама
-</button>
-<button class="btn btn-ghost" id="profileBtn" style="display:flex;align-items:center;gap:10px;padding:8px 14px">
-<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary-a),var(--primary-b));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;box-shadow:0 4px 12px rgba(43,182,255,0.3)">
-<span id="userInitial"></span>
-</div>
-<span id="userName" style="font-weight:600"></span>
-</button>
-<button class="btn btn-ghost" id="logoutBtn" style="font-size:13px;padding:8px 12px">Выйти</button>
-</div>
-</header>
-<section aria-labelledby="heroTitle" class="hero">
-<div class="hero-top">
-<div class="hero-left">
-<h2 id="heroTitle" style="font-size:32px;background:linear-gradient(90deg,var(--text),var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Лента Наполеона — следи за завоеваниями</h2>
-<p class="muted" style="font-size:15px;line-height:1.5">Смотри сторис, читай посты, оставляй комментарии и загляни в — всё в одном месте.</p>
-<div class="hero-actions">
-<button class="btn btn-ghost" id="openStoryList" style="padding:10px 16px">🎬 Смотреть все сторис</button>
-</div>
-</div>
-<div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
-<div style="background:linear-gradient(135deg,var(--primary-a),var(--primary-b));padding:12px 18px;border-radius:14px;color:white;font-weight:700;box-shadow:0 8px 24px rgba(43,150,255,0.2);font-size:14px">🎉 Промо: скидка на Нормандию</div>
-<div style="font-size:14px;color:var(--muted)">Добро пожаловать в Францито</div>
-</div>
-</div>
-<div aria-label="Сторис Наполеона" class="stories" id="storiesRow">
-</div>
-</section>
-<section>
-<div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:8px">
-<h2 style="font-size:24px;margin:0">📮 Посты</h2>
-<div class="muted" style="font-size:14px">Читайте последние заметки Наполеона</div>
-</div>
-<div aria-live="polite" class="posts" id="postsList">
-</div>
-</section>
-</div>
-</div>
-
-<div aria-hidden="true" aria-modal="true" class="modal-backdrop" id="modalBackdrop" role="dialog">
-<div class="modal" id="modalContent" role="document">
-</div>
-</div>
+<!-- Подключаем Leaflet для карты -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-// Константы и переменные
-const AUTH_KEY = 'francito_auth';
-const POSTS_KEY = 'francito_posts';
-const STORIES_KEY = 'francito_stories';
-const COMMENTS_KEY = 'francito_comments';
-const LIKES_KEY = 'francito_likes';
-const USERS_KEY = 'francito_users';
-const AD_KEY = 'francito_ad';
-const AD_SHOWN_KEY = 'francito_ad_shown';
-const DATA_VERSION_KEY = 'francito_data_version';
+    (function() {
+        const API_KEY = '50148e0eddfdf257f62f32d0d4b6a830';
+        const FLIGHT_IATA = 'U61555';
 
-// JSONBin.io конфигурация - ОБЩАЯ БАЗА ДАННЫХ ДЛЯ ВСЕХ
-const JSONBIN_BIN_ID = '675d9d63acd3cb34a8878e8e'; // Это ID общей базы данных
-const JSONBIN_API_KEY = '$2a$10$Qdh3Jp2u2o6a1e5Y8qZJ.uKcX7v9wY2zA1bC3dE4fG5hI6jK7lM8n9'; // Ключ API
+        // DOM-элементы
+        const statusPill = document.getElementById('statusPill');
+        const routeLabel = document.getElementById('routeLabel');
+        const altitudeValue = document.getElementById('altitudeValue');
+        const speedValue = document.getElementById('speedValue');
+        const countdownValue = document.getElementById('countdownValue');
+        const depAirport = document.getElementById('depAirport');
+        const arrAirport = document.getElementById('arrAirport');
+        const schedDep = document.getElementById('schedDep');
+        const schedArr = document.getElementById('schedArr');
+        const delayValue = document.getElementById('delayValue');
+        const lastUpdate = document.getElementById('lastUpdate');
 
-const NAPOLEON_ACCOUNT = {
-  username: 'Наполеон',
-  email: 'napoleon@france.fr',
-  password: 'админ1',
-  joined: new Date().toISOString()
-};
+        // Переменные для карты
+        let map = null;
+        let marker = null;
+        let pathLine = null;
+        const pathPoints = [];
 
-let CURRENT_USER = null;
-let POSTS = [];
-let STORIES = [];
-let EXTRA_COMMENTS = {};
-let LIKES_DATA = {};
-let currentFile = null;
-let currentAdFile = null;
-let selectedAdColor = '667eea,764ba2';
+        // Функция для отрисовки карты
+        function initMap(lat, lng) {
+            if (!map) {
+                map = L.map('map').setView([lat, lng], 6);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap',
+                    maxZoom: 18,
+                }).addTo(map);
+            }
 
-// Функции для работы с облачной базой данных
-async function loadFromCloud() {
-  try {
-    updateSyncStatus('🔄 Загрузка из облака...');
-    
-    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-      headers: {
-        'X-Master-Key': JSONBIN_API_KEY,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error('Ошибка загрузки из облака');
-    }
-    
-    const data = await response.json();
-    const cloudData = data.record;
-    
-    if (cloudData) {
-      POSTS = cloudData.posts || getDefaultPosts();
-      STORIES = cloudData.stories || getDefaultStories();
-      EXTRA_COMMENTS = cloudData.comments || {};
-      LIKES_DATA = cloudData.likes || {};
-      
-      // Сохраняем локально для оффлайн работы
-      saveToLocalStorage();
-      updateSyncStatus('✅ Данные из облака загружены');
-      return true;
-    }
-  } catch (error) {
-    console.log('Не удалось загрузить из облака, используем локальные данные:', error);
-    updateSyncStatus('⚠️ Используем локальные данные');
-    return false;
-  }
-}
+            if (!marker) {
+                const icon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background:#007aff; width:14px; height:14px; border-radius:50%; border:3px solid white; box-shadow:0 0 12px rgba(0,122,255,0.6);"></div>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10],
+                });
+                marker = L.marker([lat, lng], { icon }).addTo(map);
+            } else {
+                marker.setLatLng([lat, lng]);
+            }
 
-async function saveToCloud() {
-  try {
-    updateSyncStatus('🔄 Сохранение в облако...');
-    
-    const dataToSave = {
-      posts: POSTS,
-      stories: STORIES,
-      comments: EXTRA_COMMENTS,
-      likes: LIKES_DATA,
-      lastUpdated: Date.now(),
-      updatedBy: CURRENT_USER?.username || 'anonymous'
-    };
-    
-    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-      method: 'PUT',
-      headers: {
-        'X-Master-Key': JSONBIN_API_KEY,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataToSave)
-    });
-    
-    if (!response.ok) {
-      throw new Error('Ошибка сохранения в облако');
-    }
-    
-    updateSyncStatus('✅ Данные сохранены в облако');
-    return true;
-  } catch (error) {
-    console.log('Не удалось сохранить в облако:', error);
-    updateSyncStatus('⚠️ Ошибка облака');
-    return false;
-  }
-}
+            // Сохраняем трек
+            pathPoints.push([lat, lng]);
+            if (pathPoints.length > 1) {
+                if (pathLine) {
+                    map.removeLayer(pathLine);
+                }
+                pathLine = L.polyline(pathPoints, {
+                    color: '#007aff',
+                    weight: 3,
+                    opacity: 0.6,
+                }).addTo(map);
+            }
 
-// Функции для работы с данными
-async function loadAllData() {
-  try {
-    // Пытаемся загрузить из облака
-    const cloudSuccess = await loadFromCloud();
-    
-    // Если не удалось загрузить из облака, используем локальные данные
-    if (!cloudSuccess) {
-      loadFromLocalStorage();
-    }
-    
-    updateSyncStatus('✅ Данные загружены');
-  } catch (error) {
-    console.error('Ошибка загрузки данных:', error);
-    resetToDefaultData();
-    updateSyncStatus('⚠️ Ошибка загрузки');
-  }
-}
-
-async function saveAllData() {
-  try {
-    // Сохраняем локально
-    saveToLocalStorage();
-    
-    // Сохраняем в облако
-    await saveToCloud();
-    
-    return true;
-  } catch (error) {
-    console.error('Ошибка сохранения данных:', error);
-    updateSyncStatus('⚠️ Ошибка сохранения');
-    return false;
-  }
-}
-
-function saveToLocalStorage() {
-  localStorage.setItem(POSTS_KEY, JSON.stringify(POSTS));
-  localStorage.setItem(STORIES_KEY, JSON.stringify(STORIES));
-  localStorage.setItem(COMMENTS_KEY, JSON.stringify(EXTRA_COMMENTS));
-  localStorage.setItem(LIKES_KEY, JSON.stringify(LIKES_DATA));
-  localStorage.setItem(DATA_VERSION_KEY, Date.now().toString());
-}
-
-function loadFromLocalStorage() {
-  const savedPosts = localStorage.getItem(POSTS_KEY);
-  POSTS = savedPosts ? JSON.parse(savedPosts) : getDefaultPosts();
-  
-  const savedStories = localStorage.getItem(STORIES_KEY);
-  STORIES = savedStories ? JSON.parse(savedStories) : getDefaultStories();
-  
-  const savedComments = localStorage.getItem(COMMENTS_KEY);
-  EXTRA_COMMENTS = savedComments ? JSON.parse(savedComments) : {};
-  
-  const savedLikes = localStorage.getItem(LIKES_KEY);
-  LIKES_DATA = savedLikes ? JSON.parse(savedLikes) : {};
-}
-
-function getDefaultPosts() {
-  return [
-    {
-      id:'p1',
-      author:'Император Наполеон',
-      avatar:'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=800&auto=format&fit=crop&s=5b8a6c1bd0d2f94a7c2f1e3b3a1f2c4d',
-      time:'Сегодня, 09:12',
-      img:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1400&auto=format&fit=crop&s=7b0e4b9cb7f0d8cb8155d2d2e3641b35',
-      text:'Нормандия получена. Впереди — новые горизонты.',
-      likes: 86,
-      liked: false
-    },
-    {
-      id:'p2',
-      author:'Император Наполеон',
-      avatar:'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=800&auto=format&fit=crop&s=5b8a6c1bd0d2f94a7c2f1e3b3a1f2c4d',
-      time:'Вчера, 18:45',
-      img:'https://images.unsplash.com/photo-1510751007277-369b4a0b8a31?q=80&w=1400&auto=format&fit=crop&s=4c6a6b1f2c0a4b8a4a5d7d3c2f1d0e0f',
-      text:'Парад завершен. Народ восторжен.',
-      likes: 120,
-      liked: false
-    }
-  ];
-}
-
-function getDefaultStories() {
-  return [
-    {id:'s1', name:'Наполеон I', img:'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1200&auto=format&fit=crop&s=5b8a6c1bd0d2f94a7c2f1e3b3a1f2c4d', caption:'Подготовка к походу'},
-    {id:'s2', name:'Поле битвы', img:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop&s=2bf4d5d7b3a1f4c4c8b1a1e9e2d3f7a8', caption:'Тактика дня'},
-    {id:'s3', name:'Карта Европы', img:'https://images.unsplash.com/photo-1527766833261-b09c3163a791?q=80&w=1200&auto=format&fit=crop&s=8c7a7c8b9d1a2b1c3e4f5a6b7c8d9e0f', caption:'Завоевания'},
-    {id:'s4', name:'Триумф', img:'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop&s=6e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b', caption:'Парад победы'}
-  ];
-}
-
-function resetToDefaultData() {
-  POSTS = getDefaultPosts();
-  STORIES = getDefaultStories();
-  EXTRA_COMMENTS = {};
-  LIKES_DATA = {};
-  saveToLocalStorage();
-}
-
-function updateSyncStatus(message) {
-  const statusElement = document.getElementById('syncStatus');
-  if (statusElement) {
-    statusElement.textContent = message;
-    
-    if (message.includes('✅') || message.includes('🔄')) {
-      statusElement.classList.remove('syncing');
-      setTimeout(() => {
-        statusElement.textContent = '☁️ Облако';
-      }, 3000);
-    } else if (message.includes('⚠️') || message.includes('синхронизация')) {
-      statusElement.classList.add('syncing');
-    }
-  }
-}
-
-// Автоматическая проверка изменений каждые 10 секунд
-function startAutoSync() {
-  setInterval(async () => {
-    try {
-      const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-        headers: {
-          'X-Master-Key': JSONBIN_API_KEY
+            map.setView([lat, lng], 6);
         }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        const cloudData = data.record;
-        const localVersion = localStorage.getItem(DATA_VERSION_KEY);
-        
-        if (cloudData && cloudData.lastUpdated > parseInt(localVersion || '0')) {
-          // Данные в облаке новее - обновляем локальные
-          POSTS = cloudData.posts || POSTS;
-          STORIES = cloudData.stories || STORIES;
-          EXTRA_COMMENTS = cloudData.comments || EXTRA_COMMENTS;
-          LIKES_DATA = cloudData.likes || LIKES_DATA;
-          
-          saveToLocalStorage();
-          renderStories();
-          renderPosts();
-          updateSyncStatus('🔄 Данные обновлены из облака');
+
+        // Форматирование времени
+        function formatTime(utcString) {
+            if (!utcString) return '—';
+            const d = new Date(utcString + 'Z');
+            if (isNaN(d)) return '—';
+            return d.toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Europe/Moscow'
+            });
         }
-      }
-    } catch (error) {
-      console.log('Ошибка автосинхронизации:', error);
-    }
-  }, 10000); // Проверяем каждые 10 секунд
-}
 
-// Остальной код остается без изменений...
-// [Здесь должен быть весь остальной код из предыдущей версии]
-// Функции для работы с постами и сторис, рендеринг, комментарии и т.д.
-
-// Для экономии места оставлю ключевые функции, но они такие же как в предыдущем коде
-function deletePost(postId) {
-  if (!confirm('Вы уверены, что хотите удалить этот пост?')) {
-    return;
-  }
-  
-  POSTS = POSTS.filter(post => post.id !== postId);
-  delete EXTRA_COMMENTS[postId];
-  delete LIKES_DATA[postId];
-  
-  if (saveAllData()) {
-    renderPosts();
-    alert('Пост успешно удален!');
-  } else {
-    alert('Ошибка при удалении поста!');
-  }
-}
-
-function deleteStory(storyId) {
-  if (!confirm('Вы уверены, что хотите удалить эту сторис?')) {
-    return;
-  }
-  
-  STORIES = STORIES.filter(story => story.id !== storyId);
-  
-  if (saveAllData()) {
-    renderStories();
-    alert('Сторис успешно удалена!');
-  } else {
-    alert('Ошибка при удалении сторис!');
-  }
-}
-
-const COMMENT_TEMPLATES = [
-  "Отличная работа, император!",
-  "Великое зрелище!",
-  "Готов к следующему приказу.",
-  "Рекомендуется укрепление фланга.",
-  "Народ восторжен!",
-  "Тактика безупречна.",
-  "Завоевания продолжаются!",
-  "Франция гордится вами!",
-  "Следующая цель - Англия!",
-  "Армия в полной готовности."
-];
-
-const COMMENT_AUTHORS = [
-  "Маршал Жан", "Офицер Люк", "Гражданин Пьер", "Командир Рен", 
-  "Аналитик Бен", "Солдат Марк", "Генерал Клод", "Капитан Поль"
-];
-
-function generateAutoComments(postText) {
-  const commentsCount = Math.floor(Math.random() * 3) + 2;
-  const comments = [];
-  
-  for (let i = 0; i < commentsCount; i++) {
-    const randomComment = COMMENT_TEMPLATES[Math.floor(Math.random() * COMMENT_TEMPLATES.length)];
-    const randomAuthor = COMMENT_AUTHORS[Math.floor(Math.random() * COMMENT_AUTHORS.length)];
-    comments.push({
-      name: randomAuthor,
-      text: randomComment
-    });
-  }
-  
-  return comments;
-}
-
-function generateAutoLikes() {
-  return Math.floor(Math.random() * 50) + 30;
-}
-
-function handleFileSelect(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  
-  if (file.size > 500 * 1024) {
-    alert('Файл слишком большой. Максимальный размер: 500KB');
-    return;
-  }
-  
-  currentFile = file;
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const preview = document.getElementById('mediaPreview');
-    const img = document.getElementById('previewImage');
-    const video = document.getElementById('previewVideo');
-    const fileName = document.getElementById('fileName');
-    
-    preview.style.display = 'block';
-    fileName.textContent = file.name;
-    
-    if (file.type.startsWith('image/')) {
-      img.src = e.target.result;
-      img.style.display = 'block';
-      video.style.display = 'none';
-    } else if (file.type.startsWith('video/')) {
-      video.src = e.target.result;
-      video.style.display = 'block';
-      img.style.display = 'none';
-    }
-  };
-  
-  reader.readAsDataURL(file);
-}
-
-function removeFile() {
-  currentFile = null;
-  document.getElementById('mediaPreview').style.display = 'none';
-  document.getElementById('fileInput').value = '';
-  document.getElementById('previewImage').style.display = 'none';
-  document.getElementById('previewVideo').style.display = 'none';
-}
-
-function openCreateModal(type = 'post') {
-  if (CURRENT_USER.username !== 'Наполеон') {
-    alert('Только Наполеон может публиковать посты и сторис!');
-    return;
-  }
-  
-  document.getElementById('createModal').style.display = 'flex';
-  document.getElementById('createModalTitle').textContent = type === 'post' ? 'Создать пост' : 'Создать сторис';
-  document.getElementById('createForm').reset();
-  document.getElementById('mediaPreview').style.display = 'none';
-  document.getElementById('previewImage').style.display = 'none';
-  document.getElementById('previewVideo').style.display = 'none';
-  currentFile = null;
-  
-  document.querySelectorAll('#createTypeTabs .welcome-tab').forEach(tab => {
-    tab.classList.remove('active');
-    if (tab.dataset.type === type) {
-      tab.classList.add('active');
-    }
-  });
-}
-
-function closeCreateModal() {
-  document.getElementById('createModal').style.display = 'none';
-}
-
-async function publishContent() {
-  const text = document.getElementById('createText').value.trim();
-  const type = document.querySelector('#createTypeTabs .welcome-tab.active').dataset.type;
-  
-  if (!text && !currentFile) {
-    alert('Добавьте текст или медиа для публикации');
-    return;
-  }
-  
-  if (CURRENT_USER.username !== 'Наполеон') {
-    alert('Только Наполеон может публиковать посты и сторис!');
-    return;
-  }
-  
-  const timestamp = new Date();
-  const timeString = timestamp.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'});
-  
-  if (type === 'post') {
-    const newPost = {
-      id: 'p' + Date.now(),
-      author: 'Император Наполеон',
-      avatar: 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=800&auto=format&fit=crop&s=5b8a6c1bd0d2f94a7c2f1e3b3a1f2c4d',
-      time: 'Только что, ' + timeString,
-      text: text,
-      likes: generateAutoLikes(),
-      liked: false
-    };
-    
-    if (currentFile) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        newPost.mediaData = e.target.result;
-        newPost.mediaType = currentFile.type;
-        POSTS.unshift(newPost);
-        
-        EXTRA_COMMENTS[newPost.id] = generateAutoComments(text);
-        
-        if (saveAllData()) {
-          closeCreateModal();
-          renderStories();
-          renderPosts();
-          alert('Пост опубликован!');
+        // Подсчёт времени до прилёта
+        function getCountdown(arrivalScheduled) {
+            if (!arrivalScheduled) return '—';
+            const now = new Date();
+            const arrival = new Date(arrivalScheduled + 'Z');
+            const diffMs = arrival - now;
+            if (diffMs <= 0) return '📍 Прибыл';
+            const diffMin = Math.floor(diffMs / 60000);
+            if (diffMin < 60) return `${diffMin} мин`;
+            const hours = Math.floor(diffMin / 60);
+            const mins = diffMin % 60;
+            return `${hours} ч ${mins} мин`;
         }
-      };
-      reader.readAsDataURL(currentFile);
-    } else {
-      POSTS.unshift(newPost);
-      EXTRA_COMMENTS[newPost.id] = generateAutoComments(text);
-      
-      if (saveAllData()) {
-        closeCreateModal();
-        renderStories();
-        renderPosts();
-        alert('Пост опубликован!');
-      }
-    }
-  } else {
-    if (!currentFile) {
-      alert('Для сторис нужно загрузить изображение!');
-      return;
-    }
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const newStory = {
-        id: 's' + Date.now(),
-        name: 'Наполеон I',
-        mediaData: e.target.result,
-        caption: text || 'Новая сторис от Наполеона'
-      };
-      
-      STORIES.unshift(newStory);
-      
-      if (saveAllData()) {
-        closeCreateModal();
-        renderStories();
-        renderPosts();
-        alert('Сторис успешно опубликована!');
-      }
-    };
-    reader.readAsDataURL(currentFile);
-  }
-}
 
-function renderStories() {
-  const storiesRow = document.getElementById('storiesRow');
-  storiesRow.innerHTML = '';
-  
-  STORIES.forEach((s, index) => {
-    const el = document.createElement('div');
-    el.className = 'story';
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    
-    const imageUrl = s.mediaData || s.img;
-    const isNapoleon = CURRENT_USER.username === 'Наполеон';
-    const deleteButton = isNapoleon ? `<button class="delete-btn" data-delete-story="${s.id}">×</button>` : '';
-    
-    el.innerHTML = `
-      <div class="avatar" role="button" tabindex="0" data-id="${s.id}">
-        <img src="${imageUrl}" alt="${escapeHtml(s.name)}" onerror="this.src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1200&auto=format&fit=crop&s=5b8a6c1bd0d2f94a7c2f1e3b3a1f2c4d'">
-        ${deleteButton}
-      </div>
-      <small>${escapeHtml(s.name)}</small>
-    `;
-    
-    el.querySelector('.avatar').addEventListener('click', (e) => {
-      if (!e.target.classList.contains('delete-btn')) {
-        openStoryViewer(s);
-      }
-    });
-    
-    if (isNapoleon) {
-      el.querySelector(`[data-delete-story="${s.id}"]`).addEventListener('click', (e) => {
-        e.stopPropagation();
-        deleteStory(s.id);
-      });
-    }
-    
-    storiesRow.appendChild(el);
-    
-    setTimeout(() => {
-      el.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-      el.style.opacity = '1';
-      el.style.transform = 'translateY(0)';
-    }, 100 * index);
-  });
-}
+        // Основной запрос
+        async function fetchFlight() {
+            try {
+                const url = `http://api.aviationstack.com/v1/flights?access_key=${API_KEY}&flight_iata=${FLIGHT_IATA}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
 
-function renderPosts() {
-  const postsList = document.getElementById('postsList');
-  postsList.innerHTML = '';
-  
-  POSTS.forEach((p, index) => {
-    const el = document.createElement('article');
-    el.className = 'post';
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    
-    const isLiked = LIKES_DATA[p.id] || false;
-    if (isLiked) {
-      p.liked = true;
-    }
-    
-    const extra = EXTRA_COMMENTS[p.id] || [];
-    const mergedComments = [...(p.comments || []), ...extra];
-    
-    let mediaContent = '';
-    if (p.mediaData) {
-      if (p.mediaType && p.mediaType.startsWith('video/')) {
-        mediaContent = `<video controls style="width:100%;height:380px;border-radius:16px;background:#000">
-          <source src="${p.mediaData}" type="${p.mediaType}">
-         </video>`;
-      } else {
-        mediaContent = `<div class="media-container"><img src="${p.mediaData}" alt="Пост ${escapeHtml(p.id)}" loading="lazy"></div>`;
-      }
-    } else if (p.video) {
-      mediaContent = `<video controls style="width:100%;height:380px;border-radius:16px;background:#000">
-        <source src="${p.video}" type="video/mp4">
-       </video>`;
-    } else if (p.img) {
-      mediaContent = `<div class="media-container"><img src="${p.img}" alt="Пост ${escapeHtml(p.id)}" loading="lazy"></div>`;
-    }
-    
-    const isNapoleon = CURRENT_USER.username === 'Наполеон';
-    const deleteButton = isNapoleon ? `<button class="delete-post-btn" data-delete-post="${p.id}">🗑️ Удалить</button>` : '';
-    
-    el.innerHTML = `
-      <div class="post-head">
-        <img src="${p.avatar}" alt="${escapeHtml(p.author)}">
-        <div class="meta">
-          <div class="author">${escapeHtml(p.author)}</div>
-          <div class="time">${escapeHtml(p.time)}</div>
-        </div>
-      </div>
-      <div class="post-body">
-        ${p.text ? `<div class="text-content">${escapeHtml(p.text)}</div>` : ''}
-        ${mediaContent}
-      </div>
-      <div class="post-actions" aria-label="Действия">
-        <button class="like-btn ${isLiked ? 'liked' : ''}" data-like="${p.id}">
-          ${isLiked ? '❤️' : '🤍'} <span class="likes-count">${p.likes}</span>
-        </button>
-        <button class="comment-btn" data-open-comments="${p.id}">
-          💬 Комментарии (${mergedComments.length})
-        </button>
-        ${deleteButton}
-      </div>
-      <div class="comments" id="comments-${p.id}" style="display:none">
-        ${mergedComments.map(c=>commentHtml(c)).join('')}
-        <div class="add-comment">
-          <input placeholder="Добавить комментарий..." aria-label="Добавить комментарий" id="input-${p.id}">
-          <button data-add="${p.id}">Отправить</button>
-        </div>
-      </div>
-    `;
+                if (!data.data || data.data.length === 0) {
+                    throw new Error('Рейс не найден');
+                }
 
-    el.querySelector('[data-like]').addEventListener('click', (e)=>{
-      const btn = e.currentTarget;
-      const wasLiked = p.liked;
-      
-      if (!wasLiked) {
-        p.likes += 1;
-        p.liked = true;
-        btn.classList.add('liked');
-        btn.innerHTML = `❤️ <span class="likes-count">${p.likes}</span>`;
-        LIKES_DATA[p.id] = true;
-      } else {
-        p.likes -= 1;
-        p.liked = false;
-        btn.classList.remove('liked');
-        btn.innerHTML = `🤍 <span class="likes-count">${p.likes}</span>`;
-        LIKES_DATA[p.id] = false;
-      }
-      
-      saveAllData();
-      
-      btn.animate([
-        { transform: 'scale(1)' },
-        { transform: 'scale(1.3)' },
-        { transform: 'scale(1)' }
-      ], { duration: 400 });
-    });
+                const flight = data.data[0];
 
-    el.querySelector('[data-open-comments]').addEventListener('click', (e)=>{
-      const area = el.querySelector(`#comments-${p.id}`);
-      area.style.display = area.style.display === 'none' ? 'flex' : 'none';
-    });
+                // --- Статус ---
+                const status = flight.flight_status || 'scheduled';
+                let statusText = status.charAt(0).toUpperCase() + status.slice(1);
+                let pillClass = 'scheduled';
+                if (status === 'scheduled') { statusText = 'По расписанию'; pillClass = 'scheduled'; }
+                else if (status === 'active') { statusText = '✈️ В полёте'; pillClass = 'flying'; }
+                else if (status === 'landed') { statusText = '✅ Приземлился'; pillClass = 'landed'; }
+                else if (status === 'cancelled') { statusText = '❌ Отменён'; pillClass = 'delayed'; }
+                else if (status === 'incident') { statusText = '⚠️ Задержан'; pillClass = 'delayed'; }
+                statusPill.textContent = statusText;
+                statusPill.className = `status-pill ${pillClass}`;
 
-    el.querySelector(`[data-add="${p.id}"]`).addEventListener('click', ()=>{
-      const input = el.querySelector(`#input-${p.id}`);
-      const text = input.value.trim();
-      if(!text) return input.focus();
-      
-      const newComment = {name:CURRENT_USER.username, text};
-      EXTRA_COMMENTS[p.id] = EXTRA_COMMENTS[p.id] || [];
-      EXTRA_COMMENTS[p.id].push(newComment);
-      saveAllData();
-      
-      input.value = '';
-      renderPosts();
-    });
+                // --- Маршрут ---
+                const depCity = flight.departure?.airport || '—';
+                const arrCity = flight.arrival?.airport || '—';
+                routeLabel.textContent = `${depCity} → ${arrCity}`;
 
-    if (isNapoleon) {
-      el.querySelector(`[data-delete-post="${p.id}"]`).addEventListener('click', ()=>{
-        deletePost(p.id);
-      });
-    }
+                // --- Высота и скорость (берём из live данных, если есть) ---
+                const altitudeFt = flight.live?.altitude || 0; // в футах
+                const altitudeKm = (altitudeFt * 0.0003048).toFixed(1);
+                altitudeValue.innerHTML = `${altitudeFt > 0 ? altitudeKm : '—'} <span class="unit">км</span>`;
 
-    postsList.appendChild(el);
-    
-    setTimeout(() => {
-      el.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-      el.style.opacity = '1';
-      el.style.transform = 'translateY(0)';
-    }, 150 * index + 200);
-  });
-}
+                const speedKt = flight.live?.speed_horizontal || 0; // в узлах
+                const speedKmh = Math.round(speedKt * 1.852);
+                speedValue.innerHTML = `${speedKt > 0 ? speedKmh : '—'} <span class="unit">км/ч</span>`;
 
-function commentHtml(c){
-  const avatar = `<div class="c-avatar">${escapeHtml((c.name||'U')[0])}</div>`;
-  return `
-    <div class="comment">
-      ${avatar}
-      <div class="c-body">
-        <div class="name">${escapeHtml(c.name || 'Аноним')}</div>
-        <div class="text">${escapeHtml(c.text)}</div>
-      </div>
-    </div>
-  `;
-}
+                // --- Время до прилёта ---
+                const arrivalSched = flight.arrival?.scheduled;
+                const countdownText = getCountdown(arrivalSched);
+                countdownValue.textContent = countdownText;
+                countdownValue.className = 'metric-value countdown';
+                if (countdownText.includes('мин') && parseInt(countdownText) < 30) {
+                    countdownValue.classList.add('urgent');
+                }
 
-function openStoryViewer(s){
-  const imageUrl = s.mediaData || s.img;
-  
-  const html = `
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;gap:12px;align-items:center">
-          <img src="${imageUrl}" alt="${escapeHtml(s.name)}" style="width:60px;height:60px;border-radius:12px;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,0.15)">
-          <div>
-            <div style="font-weight:700;font-size:16px">${escapeHtml(s.name)}</div>
-            <div style="font-size:14px;color:${getMuted()};">Сторис</div>
-          </div>
-        </div>
-        <button data-close class="btn btn-ghost" style="padding:10px 16px">Закрыть</button>
-      </div>
-      <div style="border-radius:16px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,0.2)">
-        <img src="${imageUrl}" alt="${escapeHtml(s.caption)}" style="width:100%;height:520px;object-fit:cover;display:block">
-      </div>
-      <div style="color:${getMuted()};font-size:15px;padding:0 8px">${escapeHtml(s.caption)}</div>
-    </div>
-  `;
-  openModal(html);
-  modalContent.querySelector('[data-close]').addEventListener('click', closeModal);
-}
+                // --- Аэропорты ---
+                depAirport.textContent = flight.departure?.iata || '—';
+                arrAirport.textContent = flight.arrival?.iata || '—';
 
-function openModal(html){
-  const modalContent = document.getElementById('modalContent');
-  modalContent.innerHTML = html;
-  const modalBackdrop = document.getElementById('modalBackdrop');
-  modalBackdrop.style.display = 'flex';
-  modalBackdrop.setAttribute('aria-hidden','false');
-  const closeBtn = modalContent.querySelector('[data-close]');
-  if(closeBtn) closeBtn.focus();
-}
+                // --- Время вылета/прилёта ---
+                schedDep.textContent = formatTime(flight.departure?.scheduled);
+                schedArr.textContent = formatTime(arrivalSched);
 
-function closeModal(){
-  const modalBackdrop = document.getElementById('modalBackdrop');
-  modalBackdrop.style.display = 'none';
-  modalBackdrop.setAttribute('aria-hidden','true');
-}
+                // --- Задержка ---
+                const delayMin = flight.departure?.delay || 0;
+                delayValue.textContent = delayMin > 0 ? `+${delayMin} мин` : '0 мин (по расписанию)';
 
-// Функции для рекламы
-function openAdModal() {
-  if (CURRENT_USER.username !== 'Наполеон') {
-    alert('Только Наполеон может настраивать рекламу!');
-    return;
-  }
-  
-  document.getElementById('adModal').style.display = 'flex';
-  
-  const adData = JSON.parse(localStorage.getItem(AD_KEY));
-  if (adData) {
-    document.getElementById('adTitle').value = adData.title || 'ОМАХ';
-    document.getElementById('adText').value = adData.text || 'МАХ ЛОВИТ ДАЖЕ ВО ФРАНЦИИ!';
-    document.getElementById('adButtonText').value = adData.buttonText || 'Узнать больше';
-    selectedAdColor = adData.color || '667eea,764ba2';
-    
-    document.querySelectorAll('.color-option').forEach(option => {
-      option.classList.remove('selected');
-      if (option.dataset.color === selectedAdColor) {
-        option.classList.add('selected');
-      }
-    });
-  }
-  
-  document.getElementById('adFileInput').value = '';
-  currentAdFile = null;
-}
+                // --- Карта (координаты из live) ---
+                const lat = flight.live?.latitude;
+                const lng = flight.live?.longitude;
+                if (lat && lng && status === 'active') {
+                    initMap(lat, lng);
+                } else if (lat && lng) {
+                    initMap(lat, lng);
+                } else {
+                    // Если координат нет — попробуем взять аэропорт вылета
+                    const depLat = flight.departure?.latitude;
+                    const depLng = flight.departure?.longitude;
+                    if (depLat && depLng) {
+                        initMap(depLat, depLng);
+                    }
+                }
 
-function closeAdModal() {
-  document.getElementById('adModal').style.display = 'none';
-  currentAdFile = null;
-}
+                // --- Время обновления ---
+                const now = new Date();
+                lastUpdate.textContent = now.toLocaleTimeString('ru-RU', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
 
-function handleAdFileSelect(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  
-  if (file.size > 1 * 1024 * 1024) {
-    alert('Файл слишком большой. Максимальный размер — 1 МБ');
-    return;
-  }
-  
-  currentAdFile = file;
-  alert(`Файл "${file.name}" успешно выбран для рекламы`);
-}
+            } catch (error) {
+                console.error('Ошибка:', error);
+                statusPill.textContent = '⚠️ Ошибка';
+                statusPill.className = 'status-pill delayed';
+                lastUpdate.textContent = `Ошибка: ${error.message}`;
+            }
+        }
 
-function saveAd() {
-  const title = document.getElementById('adTitle').value.trim();
-  const text = document.getElementById('adText').value.trim();
-  const buttonText = document.getElementById('adButtonText').value.trim();
-  
-  if (!title || !text || !buttonText) {
-    alert('Заполните все поля рекламы!');
-    return;
-  }
-  
-  const adData = {
-    title,
-    text,
-    buttonText,
-    color: selectedAdColor,
-    timestamp: new Date().toISOString()
-  };
-  
-  if (currentAdFile) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      adData.media = e.target.result;
-      adData.mediaType = currentAdFile.type;
-      localStorage.setItem(AD_KEY, JSON.stringify(adData));
-      closeAdModal();
-      alert('Реклама успешно сохранена!');
-    };
-    reader.readAsDataURL(currentAdFile);
-  } else {
-    const existingAd = JSON.parse(localStorage.getItem(AD_KEY));
-    if (existingAd && existingAd.media) {
-      adData.media = existingAd.media;
-      adData.mediaType = existingAd.mediaType;
-    }
-    localStorage.setItem(AD_KEY, JSON.stringify(adData));
-    closeAdModal();
-    alert('Реклама успешно сохранена!');
-  }
-}
+        // Запускаем первый раз
+        fetchFlight();
 
-function showAdOnce() {
-  const adShown = localStorage.getItem(AD_SHOWN_KEY);
-  if (adShown) {
-    return;
-  }
-  
-  const adData = JSON.parse(localStorage.getItem(AD_KEY));
-  if (!adData) {
-    return;
-  }
-  
-  localStorage.setItem(AD_SHOWN_KEY, 'true');
-  setTimeout(showFullscreenAd, 3000);
-}
+        // И каждые 10 секунд — автоматически!
+        setInterval(fetchFlight, 10000);
 
-function showFullscreenAd() {
-  const adData = JSON.parse(localStorage.getItem(AD_KEY));
-  if (!adData) return;
-  
-  const colors = adData.color.split(',');
-  const gradient = `linear-gradient(135deg, #${colors[0]}, #${colors[1]})`;
-  
-  const adContent = document.getElementById('fullscreenAdContent');
-  adContent.style.background = gradient;
-  
-  let mediaContent = '';
-  if (adData.media) {
-    if (adData.mediaType && adData.mediaType.startsWith('video/')) {
-      mediaContent = `
-        <div class="ad-video-container">
-          <video src="${adData.media}" controls autoplay muted style="width:100%;height:100%;object-fit:cover"></video>
-        </div>
-      `;
-    } else {
-      mediaContent = `
-        <div class="ad-image-container">
-          <img src="${adData.media}" alt="Рекламное изображение" style="width:100%;height:100%;object-fit:cover">
-        </div>
-      `;
-    }
-  } else {
-    mediaContent = `
-      <div style="width:100%;max-width:360px;height:200px;margin:0 auto 16px auto;border-radius:16px;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;font-weight:700;background:rgba(255,255,255,0.2)">
-        Рекламное место
-      </div>
-    `;
-  }
-  
-  adContent.innerHTML = `
-    <button class="ad-close" id="closeFullscreenAd">×</button>
-    <h2 style="margin:0 0 12px 0;color:white;font-size:24px;font-weight:800;line-height:1.2">${escapeHtml(adData.title)}</h2>
-    <p style="margin:0 0 15px 0;font-size:18px;font-weight:700;line-height:1.3">${escapeHtml(adData.text)}</p>
-    ${mediaContent}
-    <button class="btn" id="fullscreenAdButton" style="background:white;color:#${colors[0]};font-weight:700;padding:12px 24px;font-size:14px;margin-top:10px;border-radius:12px">${escapeHtml(adData.buttonText)}</button>
-  `;
-  
-  document.getElementById('fullscreenAd').style.display = 'flex';
-  
-  document.getElementById('closeFullscreenAd').addEventListener('click', closeFullscreenAd);
-  document.getElementById('fullscreenAdButton').addEventListener('click', () => {
-    alert('Переход по рекламе...');
-    closeFullscreenAd();
-  });
-}
-
-function closeFullscreenAd() {
-  document.getElementById('fullscreenAd').style.display = 'none';
-}
-
-// Функции профиля
-function openProfileModal() {
-  document.getElementById('profileModal').style.display = 'flex';
-  document.getElementById('profileUsername').textContent = CURRENT_USER.username;
-  document.getElementById('profileEmail').textContent = CURRENT_USER.email;
-  document.getElementById('profileInitial').textContent = CURRENT_USER.username.charAt(0).toUpperCase();
-  document.getElementById('profileUsernameInput').value = CURRENT_USER.username;
-  document.getElementById('profileEmailInput').value = CURRENT_USER.email;
-}
-
-function closeProfileModal() {
-  document.getElementById('profileModal').style.display = 'none';
-}
-
-// Вспомогательные функции
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function getMuted(){ return 'rgba(88,115,136,0.9)'; }
-
-// Авторизация
-function checkAuth() {
-  try {
-    const authData = localStorage.getItem(AUTH_KEY);
-    if (authData) {
-      CURRENT_USER = JSON.parse(authData);
-      initializeApp();
-    } else {
-      showWelcomeModal();
-    }
-  } catch (e) {
-    showWelcomeModal();
-  }
-}
-
-function showWelcomeModal() {
-  document.getElementById('welcomeModal').style.display = 'flex';
-  document.getElementById('mainContent').style.display = 'none';
-}
-
-function showMainContent() {
-  document.getElementById('welcomeModal').style.display = 'none';
-  document.getElementById('mainContent').style.display = 'block';
-  
-  const mainContent = document.getElementById('mainContent');
-  mainContent.style.opacity = '0';
-  mainContent.classList.add('smooth-entrance');
-}
-
-async function initializeApp() {
-  await loadAllData();
-  showMainContent();
-  
-  document.getElementById('userName').textContent = CURRENT_USER.username;
-  document.getElementById('userInitial').textContent = CURRENT_USER.username.charAt(0).toUpperCase();
-  
-  const isNapoleon = CURRENT_USER.username === 'Наполеон';
-  document.getElementById('createPostBtn').style.display = isNapoleon ? 'flex' : 'none';
-  document.getElementById('createAdBtn').style.display = isNapoleon ? 'flex' : 'none';
-  
-  renderStories();
-  renderPosts();
-  startAutoSync();
-  showAdOnce();
-  
-  document.querySelectorAll('.post, .story').forEach((el, i) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    setTimeout(() => {
-      el.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-      el.style.opacity = '1';
-      el.style.transform = 'translateY(0)';
-    }, 100 * i);
-  });
-}
-
-function login(username, password) {
-  if (username === 'Наполеон' && password === 'админ1') {
-    CURRENT_USER = {...NAPOLEON_ACCOUNT};
-    localStorage.setItem(AUTH_KEY, JSON.stringify(CURRENT_USER));
-    initializeApp();
-    return true;
-  }
-  
-  const users = JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
-  if (users[username] && users[username].password === password) {
-    CURRENT_USER = users[username];
-    localStorage.setItem(AUTH_KEY, JSON.stringify(CURRENT_USER));
-    initializeApp();
-    return true;
-  }
-  return false;
-}
-
-function register(username, email, password) {
-  const users = JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
-  if (users[username]) {
-    return false;
-  }
-  
-  const newUser = {
-    username,
-    email,
-    password,
-    joined: new Date().toISOString()
-  };
-  
-  users[username] = newUser;
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-  
-  CURRENT_USER = newUser;
-  localStorage.setItem(AUTH_KEY, JSON.stringify(CURRENT_USER));
-  initializeApp();
-  return true;
-}
-
-function logout() {
-  CURRENT_USER = null;
-  localStorage.removeItem(AUTH_KEY);
-  localStorage.removeItem(AD_SHOWN_KEY);
-  showWelcomeModal();
-}
-
-// Инициализация событий
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.welcome-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.welcome-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('registerForm').style.display = 'none';
-      
-      if (tab.dataset.tab === 'login') {
-        document.getElementById('loginForm').style.display = 'block';
-      } else {
-        document.getElementById('registerForm').style.display = 'block';
-      }
-    });
-  });
-
-  document.querySelectorAll('#createTypeTabs .welcome-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('#createTypeTabs .welcome-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById('createModalTitle').textContent = tab.dataset.type === 'post' ? 'Создать пост' : 'Создать сторис';
-    });
-  });
-
-  document.querySelectorAll('.color-option').forEach(option => {
-    option.addEventListener('click', () => {
-      document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
-      option.classList.add('selected');
-      selectedAdColor = option.dataset.color;
-    });
-  });
-
-  document.getElementById('fileUploadArea').addEventListener('click', () => {
-    document.getElementById('fileInput').click();
-  });
-  
-  document.getElementById('fileInput').addEventListener('change', handleFileSelect);
-  document.getElementById('removeFileBtn').addEventListener('click', removeFile);
-
-  document.getElementById('adFileUploadArea').addEventListener('click', () => {
-    document.getElementById('adFileInput').click();
-  });
-  
-  document.getElementById('adFileInput').addEventListener('change', handleAdFileSelect);
-
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
-    
-    if (!login(username, password)) {
-      alert('Неверное имя пользователя или пароль');
-    }
-  });
-
-  document.getElementById('registerForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const username = document.getElementById('registerUsername').value;
-    const email = document.getElementById('registerEmail').value;
-    const password = document.getElementById('registerPassword').value;
-    
-    if (!register(username, email, password)) {
-      alert('Пользователь с таким именем уже существует');
-    }
-  });
-
-  document.getElementById('createPostBtn').addEventListener('click', () => {
-    openCreateModal('post');
-  });
-
-  document.getElementById('createAdBtn').addEventListener('click', openAdModal);
-
-  document.getElementById('createForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    publishContent();
-  });
-
-  document.getElementById('adForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    saveAd();
-  });
-
-  document.getElementById('profileBtn').addEventListener('click', openProfileModal);
-
-  document.getElementById('closeCreateBtn').addEventListener('click', closeCreateModal);
-  document.getElementById('closeProfileBtn').addEventListener('click', closeProfileModal);
-  document.getElementById('closeAdBtn').addEventListener('click', closeAdModal);
-
-  document.getElementById('logoutBtn').addEventListener('click', logout);
-
-  document.getElementById('openStoryList').addEventListener('click', ()=> openStoryViewer(STORIES[0]));
-
-  document.getElementById('manualSyncBtn').addEventListener('click', async function() {
-    updateSyncStatus('🔄 Синхронизация...');
-    await loadAllData();
-    renderStories();
-    renderPosts();
-    updateSyncStatus('✅ Данные обновлены');
-  });
-
-  document.getElementById('clearDataBtn').addEventListener('click', function() {
-    if (confirm('Очистить все данные и восстановить по умолчанию?')) {
-      resetToDefaultData();
-      renderStories();
-      renderPosts();
-      updateSyncStatus('✅ Данные сброшены');
-    }
-  });
-
-  const modalBackdrop = document.getElementById('modalBackdrop');
-  modalBackdrop.addEventListener('click', (e)=>{
-    if(e.target === modalBackdrop) closeModal();
-  });
-
-  window.addEventListener('keydown', (e)=>{ 
-    if(e.key === 'Escape') {
-      closeModal();
-      closeCreateModal();
-      closeProfileModal();
-      closeAdModal();
-      closeFullscreenAd();
-    }
-  });
-});
-
-checkAuth();
+    })();
 </script>
+
 </body>
 </html>
